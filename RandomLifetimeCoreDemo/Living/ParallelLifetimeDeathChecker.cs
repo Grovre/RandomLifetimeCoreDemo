@@ -49,17 +49,14 @@ public sealed class ParallelLifetimeDeathChecker
     {
         while (true)
         {
-            var time = DateTime.Now.Millisecond;
+            var time = DateTime.Now;
             foreach (var instance in _instances)
             {
                 if (time < instance.PlannedDeathTime)
                     continue;
                 
                 instance.WhenPastExpectedDeath();
-                if (instance.RemoveFromWatchAfterDeathTime)
-                {
-                    StopWatching(instance);
-                }
+                StopWatching(instance);
             }
 
             while (!_queuedSetActions.IsEmpty)

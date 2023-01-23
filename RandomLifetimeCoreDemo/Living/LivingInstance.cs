@@ -4,11 +4,10 @@ namespace RandomLifetimeCoreDemo.Living;
 
 public abstract class LivingInstance
 {
-    public readonly long BirthTime;
-    public readonly long PlannedDeathTime;
-    public bool RemoveFromWatchAfterDeathTime = true;
+    public readonly DateTime BirthTime;
+    public readonly DateTime PlannedDeathTime;
 
-    protected LivingInstance(long birthTime, long plannedDeathTime)
+    protected LivingInstance(DateTime birthTime, DateTime plannedDeathTime)
     {
         BirthTime = birthTime;
         PlannedDeathTime = plannedDeathTime;
