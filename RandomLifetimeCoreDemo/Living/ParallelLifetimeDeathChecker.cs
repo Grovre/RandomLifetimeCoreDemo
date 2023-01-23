@@ -52,7 +52,7 @@ public sealed class ParallelLifetimeDeathChecker
             var time = DateTime.Now.Millisecond;
             foreach (var instance in _instances)
             {
-                if (time > instance.PlannedDeathTime)
+                if (time < instance.PlannedDeathTime)
                     continue;
                 
                 instance.WhenPastExpectedDeath();
@@ -64,11 +64,8 @@ public sealed class ParallelLifetimeDeathChecker
 
             while (!_queuedSetActions.IsEmpty)
             {
-                var success = _queuedSetActions.TryDequeue(out var result);
-                if (!success || result == null)
-                    continue;
-                
-                result.Invoke();
+                _queuedSetActions.TryDequeue(out var result);
+                result?.Invoke();
             }
         }
     }

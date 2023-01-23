@@ -1,17 +1,21 @@
 ﻿using System.Text;
 using IterationSystem;
+using RandomLifetimeCoreDemo.Living;
+using RandomLifetimeCoreDemo.Other;
 
 namespace RandomLifetimeCoreDemo;
 
 public static class Program
 {
-    public static async Task Main()
+    public static void Main()
     {
-        uint iter = 0;
-        var iterEnv = new IterationEnvironment(TimeSpan.FromSeconds(10));
-        iterEnv.MillisecondIterationActions += () => iter += 1u;
-        Console.WriteLine("Starting!");
-        iterEnv.BeginBlocking();
-        Console.WriteLine($"Done! {iter} iterations completed");
+        var deathChecker = new ParallelLifetimeDeathChecker();
+        for (var i = 0; i < 20; i++)
+        {
+            deathChecker.BeginWatching(Firework.Random(Random.Shared, TimeSpan.FromSeconds(19)));
+        }
+
+        deathChecker.StartWatchThread();
+        Thread.Sleep(TimeSpan.FromSeconds(20));
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace RandomLifetimeCoreDemo;
+﻿namespace RandomLifetimeCoreDemo.Other;
 
 public interface IUnique
 {
