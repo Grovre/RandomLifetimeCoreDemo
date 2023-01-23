@@ -7,7 +7,7 @@ public class Firework : LivingInstance, IUnique
 {
     public Guid UniqueIdentifier { get; set; }
 
-    public Firework(Random random, DateTime birthTime, DateTime plannedDeathTime) : base(birthTime, plannedDeathTime)
+    public Firework(DateTime birthTime, DateTime plannedDeathTime) : base(birthTime, plannedDeathTime)
     {
         this.RefreshUniqueId();
     }
@@ -15,7 +15,7 @@ public class Firework : LivingInstance, IUnique
     public static Firework Random(Random random, TimeSpan maxDeathTime)
     {
         var randomDeathTime = TimeHelper.RandomDateTimeFromNowWithin(maxDeathTime, random);
-        var fw = new Firework(random, DateTime.Now, randomDeathTime);
+        var fw = new Firework(DateTime.Now, randomDeathTime);
         return fw;
     }
     
