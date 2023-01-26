@@ -1,4 +1,4 @@
-﻿namespace RandomLifetimeCoreDemo.Other;
+﻿namespace RandomLifetimeCoreDemo.Other.Helpers;
 
 public static class TimeHelper
 {

@@ -1,7 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using System.Text;
-
-namespace RandomLifetimeCoreDemo.Other;
+﻿namespace RandomLifetimeCoreDemo.Other.Helpers;
 
 public static class StringHelper
 {
