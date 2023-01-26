@@ -1,4 +1,5 @@
 ﻿using NAudio.Wave;
+using SimpleLogger;
 
 namespace RandomLifetimeCoreDemo.Other.Audio;
 
@@ -40,6 +41,7 @@ public sealed class WavPlayer : IDisposable
     /// </summary>
     public void Play()
     {
+        Logger.SharedConsoleLogger.Log($"Playing sound {_audioFileReader.FileName}");
         _audioFileReader.Position = 0L;
         _audioFileReader.Volume = 1F;
         _waveOutEvent.Play();
@@ -51,6 +53,7 @@ public sealed class WavPlayer : IDisposable
     /// </summary>
     public void Dispose()
     {
+        Logger.SharedConsoleLogger.Log("Disposing a WavPlayer");
         _audioFileReader.Dispose();
         _waveOutEvent.Dispose();
     }

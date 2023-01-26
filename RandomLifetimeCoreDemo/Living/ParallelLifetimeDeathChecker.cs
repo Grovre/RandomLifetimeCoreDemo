@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Diagnostics;
+using SimpleLogger;
 
 namespace RandomLifetimeCoreDemo.Living;
 
@@ -24,18 +25,50 @@ public sealed class ParallelLifetimeDeathChecker
     /// instance. If this is set too high, a side effect
     /// may be instance deaths being caught in batches.
     /// </summary>
-    public int MonitorMsInterval { get; set; } = 100;
     private readonly HashSet<LivingInstance> _instances;
     private readonly ConcurrentQueue<Action> _queuedSetActions;
     private readonly Thread _thread;
     private volatile bool _aliveThread;
+    private readonly Semaphore _monitorGate;
+    private readonly Timer _openGateTimer;
 
-    public ParallelLifetimeDeathChecker()
+    public ParallelLifetimeDeathChecker(TimeSpan minIntervalBetweenChecks)
     {
         _instances = new();
         _queuedSetActions = new();
+        _monitorGate = new(1, 1, "Death Monitor Gate");
+        _openGateTimer = new Timer
+            (_ =>
+            {
+                try
+                {
+                    _monitorGate.Release();
+                }
+                catch (SemaphoreFullException)
+                {
+                    // Ignore full semaphore exceptions
+                    // in case monitor did not complete in time
+                }
+            }, null, TimeSpan.Zero, minIntervalBetweenChecks);
         _thread = new(Monitor);
         _aliveThread = true;
+    }
+    
+    /// <summary>
+    /// The minimum time between checking for deaths within the
+    /// LivingInstance container and completing the
+    /// predefined actions set by the class. If completing a
+    /// current enumeration takes longer than 100ms, the
+    /// thread will not wait to begin the next enumeration. If
+    /// it takes less than 100ms, the thread will wait until
+    /// the 100th millisecond passes from the beginning of
+    /// the enumeration.
+    /// </summary>
+    /// <param name="interval">The new time to wait at least between each enumeration</param>
+    public void ChangeInterval(TimeSpan interval)
+    {
+        Logger.SharedConsoleLogger.Log("Changing a death checker's minimum enumeration interval");
+        _openGateTimer.Change(TimeSpan.Zero, interval);
     }
 
     /// <summary>
@@ -47,6 +80,7 @@ public sealed class ParallelLifetimeDeathChecker
     /// <param name="instance">The instance to be added to the HashSet</param>
     public void BeginWatching(LivingInstance instance)
     {
+        Logger.SharedConsoleLogger.Log("Adding an object to a death checker watch pool");
         Debug.Assert(instance != null);
 
         void AddAction()
@@ -94,6 +128,7 @@ public sealed class ParallelLifetimeDeathChecker
     /// </summary>
     public void StopWatchThread()
     {
+        Logger.SharedConsoleLogger.Log("Stopping a death checker thread");
         _aliveThread = false;
     }
     
@@ -105,8 +140,8 @@ public sealed class ParallelLifetimeDeathChecker
     {
         while (_aliveThread)
         {
-            Thread.Sleep(MonitorMsInterval);
             var time = DateTime.Now;
+            Logger.SharedConsoleLogger.Log("Beginning enumeration in a death checker instance");
             foreach (var instance in _instances)
             {
                 if (time < instance.PlannedDeathTime)
@@ -121,6 +156,8 @@ public sealed class ParallelLifetimeDeathChecker
                 _queuedSetActions.TryDequeue(out var result);
                 result?.Invoke();
             }
+
+            _monitorGate.WaitOne();
         }
     }
 }

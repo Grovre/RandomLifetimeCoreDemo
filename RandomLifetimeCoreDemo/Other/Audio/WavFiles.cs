@@ -1,4 +1,6 @@
-﻿namespace RandomLifetimeCoreDemo.Other.Audio;
+﻿using SimpleLogger;
+
+namespace RandomLifetimeCoreDemo.Other.Audio;
 
 /// <summary>
 /// A class that provides simplification to
@@ -20,8 +22,8 @@ public sealed class WavFiles
     /// directory.
     /// </summary>
     public int MsBeforeDisposingPlayer { get; set; } = 7_500;
-    public readonly IReadOnlyList<string> Files;
-    public readonly string DirectoryPath;
+    public IReadOnlyList<string> Files { get; }
+    public string DirectoryPath { get; set; }
 
     public WavFiles(string directory)
     {
@@ -38,6 +40,7 @@ public sealed class WavFiles
     /// <param name="random">The random object used to get the random .wav file</param>
     public void PlayRandom(Random random)
     {
+        Logger.SharedConsoleLogger.Log("Playing a random sound");
         var file = Files[random.Next(Files.Count)];
         var player = new WavPlayer(file);
         player.Play();

@@ -9,6 +9,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\IterationSystem\IterationSystem.csproj" />
+      <ProjectReference Include="..\SimpleLogger\SimpleLogger.csproj" />
     </ItemGroup>
 
     <ItemGroup>

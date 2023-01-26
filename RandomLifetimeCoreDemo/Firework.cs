@@ -1,6 +1,7 @@
 ﻿using RandomLifetimeCoreDemo.Living;
 using RandomLifetimeCoreDemo.Other;
 using RandomLifetimeCoreDemo.Other.Helpers;
+using SimpleLogger;
 
 namespace RandomLifetimeCoreDemo;
 
@@ -29,7 +30,10 @@ public class Firework : LivingInstance, IUnique
     {
         var randomDeathTime = TimeHelper.RandomDateTimeFromNowWithin(maxDeathTime, random);
         var fw = new Firework(randomDeathTime);
-        fw.OnDeath += () => Console.WriteLine($"B{"O".RepeatStack(random.Next(2, 6))}M!");
+        const int minOCount = 2;
+        const int maxOCount = 10;
+        fw.OnDeath += () => Console.WriteLine($"B{"O".RepeatStack(random.Next(minOCount, maxOCount))}M!");
+        Logger.SharedConsoleLogger.Log($"Created a random firework to die at {fw.PlannedDeathTime} (in {(fw.PlannedDeathTime - DateTime.Now).TotalMilliseconds}ms)");
         return fw;
     }
 }

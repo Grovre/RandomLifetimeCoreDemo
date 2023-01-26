@@ -1,4 +1,6 @@
-﻿namespace RandomLifetimeCoreDemo.Other;
+﻿using SimpleLogger;
+
+namespace RandomLifetimeCoreDemo.Other;
 
 /// <summary>
 /// This interface provides a simple way
