@@ -8,27 +8,31 @@ namespace RandomLifetimeCoreDemo;
 
 public static class Program
 {
-    public static void Main_O()
+    public static void Main()
     {
         var deathChecker = new ParallelLifetimeDeathChecker();
+        var fireworkSoundDir = $"{new DirectoryInfo(Directory.GetCurrentDirectory())
+            .Parent!
+            .Parent!
+            .Parent!
+            .FullName}\\FireworkSoundEffects";
+        Console.WriteLine(fireworkSoundDir);
         
-        for (var i = 0; i < 20; i++)
+        var sounds =
+            new WavFiles(fireworkSoundDir);
+
+        const int fireworksToExplode = 100;
+        const int secondsForFireworksToExplode = 60;
+        for (var i = 0; i < fireworksToExplode; i++)
         {
-            var fw = Firework.Random(Random.Shared, TimeSpan.FromSeconds(19));
+            var fw = Firework.Random(Random.Shared, TimeSpan.FromSeconds(secondsForFireworksToExplode));
+            fw.OnDeath += () => sounds.PlayRandom(Random.Shared);
             deathChecker.BeginWatching(fw);
         }
 
         deathChecker.StartWatchThread();
-        Thread.Sleep(TimeSpan.FromSeconds(20));
+        Thread.Sleep(TimeSpan.FromSeconds(secondsForFireworksToExplode) + TimeSpan.FromMilliseconds(WavFiles.MsBeforeDisposingPlayer));
+        Console.WriteLine("here");
         deathChecker.StopWatchThread();
-    }
-
-    public static void Main()
-    {
-        var player =
-            new WavPlayer(
-                @"C:\Users\lando\RiderProjects\RandomLifetimeCoreDemo\RandomLifetimeCoreDemo\FireworkSoundEffects\street-firework.wav");
-        player.Play();
-        Thread.Sleep(5_000);
     }
 }
