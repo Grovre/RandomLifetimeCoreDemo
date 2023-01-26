@@ -6,12 +6,11 @@ public abstract class LivingInstance
 {
     public readonly DateTime BirthTime;
     public readonly DateTime PlannedDeathTime;
+    public Action? OnDeath;
 
-    protected LivingInstance(DateTime birthTime, DateTime plannedDeathTime)
+    protected LivingInstance(DateTime plannedDeathTime)
     {
-        BirthTime = birthTime;
+        BirthTime = DateTime.Now;
         PlannedDeathTime = plannedDeathTime;
     }
-
-    internal abstract void WhenPastExpectedDeath();
 }

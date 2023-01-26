@@ -8,12 +8,14 @@ public sealed class ParallelLifetimeDeathChecker
     private readonly HashSet<LivingInstance> _instances;
     private readonly ConcurrentQueue<Action> _queuedSetActions;
     private readonly Thread _thread;
+    private volatile bool _aliveThread;
 
     public ParallelLifetimeDeathChecker()
     {
         _instances = new();
         _queuedSetActions = new();
         _thread = new(Monitor);
+        _aliveThread = true;
     }
 
     public void BeginWatching(LivingInstance instance)
@@ -45,17 +47,22 @@ public sealed class ParallelLifetimeDeathChecker
         _thread.Start();
     }
 
+    public void StopWatchThread()
+    {
+        _aliveThread = false;
+    }
+
     private void Monitor()
     {
-        while (true)
+        while (_aliveThread)
         {
             var time = DateTime.Now;
             foreach (var instance in _instances)
             {
                 if (time < instance.PlannedDeathTime)
                     continue;
-                
-                instance.WhenPastExpectedDeath();
+
+                instance.OnDeath?.Invoke();
                 StopWatching(instance);
             }
 
