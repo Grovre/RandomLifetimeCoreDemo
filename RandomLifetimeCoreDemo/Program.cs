@@ -2,12 +2,13 @@
 using IterationSystem;
 using RandomLifetimeCoreDemo.Living;
 using RandomLifetimeCoreDemo.Other;
+using RandomLifetimeCoreDemo.Other.Audio;
 
 namespace RandomLifetimeCoreDemo;
 
 public static class Program
 {
-    public static void Main()
+    public static void Main_O()
     {
         var deathChecker = new ParallelLifetimeDeathChecker();
         
@@ -20,5 +21,14 @@ public static class Program
         deathChecker.StartWatchThread();
         Thread.Sleep(TimeSpan.FromSeconds(20));
         deathChecker.StopWatchThread();
+    }
+
+    public static void Main()
+    {
+        var player =
+            new WavPlayer(
+                @"C:\Users\lando\RiderProjects\RandomLifetimeCoreDemo\RandomLifetimeCoreDemo\FireworkSoundEffects\street-firework.wav");
+        player.Play();
+        Thread.Sleep(5_000);
     }
 }
