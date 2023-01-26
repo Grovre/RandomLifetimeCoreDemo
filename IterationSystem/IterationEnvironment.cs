@@ -3,8 +3,8 @@
 public class IterationEnvironment
 {
     public TimeSpan RunTime { get; set; }
-    public Action? MillisecondIterationActions;
-    public volatile bool ContinueLooping;
+    public Action? MillisecondIterationActions { get; set; }
+    public bool ContinueLooping { get; set; }
 
     public IterationEnvironment(TimeSpan timeUntilStop, params Action[] actions)
     {
@@ -22,7 +22,9 @@ public class IterationEnvironment
         {
             Console.Error.WriteLine("WARNING: No actions to complete in iteration environment");
             Console.Error.WriteLine("Starting empty iteration loop...");
+            // ReSharper disable once EmptyEmbeddedStatement
             while (ContinueLooping) ;
+
             return;
         }
         

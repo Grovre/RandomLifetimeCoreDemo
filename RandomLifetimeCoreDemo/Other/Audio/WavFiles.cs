@@ -1,8 +1,25 @@
 ﻿namespace RandomLifetimeCoreDemo.Other.Audio;
 
+/// <summary>
+/// A class that provides simplification to
+/// using multiple .wav files. Creates a
+/// player every time an audio file is
+/// fetched and disposes of it automatically
+/// after a constant amount of time. It is
+/// recommended to change this after
+/// instantiation to something at least
+/// as long as the longest .wav file
+/// in the directory given.
+/// </summary>
 public sealed class WavFiles
 {
-    public const int MsBeforeDisposingPlayer = 7_500;
+    /// <summary>
+    /// Time before the player object is disposed.
+    /// Recommended to be at least as long as
+    /// the longest .wav file in the provided
+    /// directory.
+    /// </summary>
+    public int MsBeforeDisposingPlayer { get; set; } = 7_500;
     public readonly IReadOnlyList<string> Files;
     public readonly string DirectoryPath;
 
@@ -15,6 +32,10 @@ public sealed class WavFiles
             .ToArray();
     }
     
+    /// <summary>
+    /// Plays a random .wav file from the given directory.
+    /// </summary>
+    /// <param name="random">The random object used to get the random .wav file</param>
     public void PlayRandom(Random random)
     {
         var file = Files[random.Next(Files.Count)];

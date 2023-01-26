@@ -1,7 +1,4 @@
-﻿using System.Text;
-using IterationSystem;
-using RandomLifetimeCoreDemo.Living;
-using RandomLifetimeCoreDemo.Other;
+﻿using RandomLifetimeCoreDemo.Living;
 using RandomLifetimeCoreDemo.Other.Audio;
 
 namespace RandomLifetimeCoreDemo;
@@ -31,8 +28,7 @@ public static class Program
         }
 
         deathChecker.StartWatchThread();
-        Thread.Sleep(TimeSpan.FromSeconds(secondsForFireworksToExplode) + TimeSpan.FromMilliseconds(WavFiles.MsBeforeDisposingPlayer));
-        Console.WriteLine("here");
+        Thread.Sleep(TimeSpan.FromSeconds(secondsForFireworksToExplode) + TimeSpan.FromMilliseconds(sounds.MsBeforeDisposingPlayer));
         deathChecker.StopWatchThread();
     }
 }
