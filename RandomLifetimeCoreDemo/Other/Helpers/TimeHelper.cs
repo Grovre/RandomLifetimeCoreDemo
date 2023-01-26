@@ -4,19 +4,13 @@ public static class TimeHelper
 {
     public static DateTime RandomDateTimeFromNowWithin(TimeSpan within, Random random)
     {
-        var min = DateTime.Now;
-        var max = min + within;
-
-        var randomTime = new DateTime(random.NextInt64(min.Ticks, max.Ticks));
-        return randomTime;
+        var randomMsIntoFuture = random.NextInt64((long)within.TotalMilliseconds);
+        return DateTime.Now.AddMilliseconds(randomMsIntoFuture);
     }
     
     public static DateTime RandomDateTimeFromUtcNowWithin(TimeSpan within, Random random)
     {
-        var min = DateTime.UtcNow;
-        var max = min + within;
-
-        var randomTime = new DateTime(random.NextInt64(min.Ticks, max.Ticks));
-        return randomTime;
+        var randomMsIntoFuture = random.NextInt64((long)within.TotalMilliseconds);
+        return DateTime.UtcNow.AddMilliseconds(randomMsIntoFuture);
     }
 }
