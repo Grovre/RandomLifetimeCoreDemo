@@ -117,6 +117,7 @@ public sealed class ParallelLifetimeDeathChecker
     /// </summary>
     public void StartWatchThread()
     {
+        Logger.SharedConsoleLogger.Log("Beginning a death checker thread");
         _thread.Start();
     }
 
